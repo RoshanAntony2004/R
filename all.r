@@ -167,3 +167,26 @@ qqnorm(residuals)
 qqline(residuals)
 
 __________________________________________________________________________________________________________________
+
+10. PROGRAM:
+
+library(ggplot2)
+library(reshape2)
+generate_distribution <- function(n, mean, sd, lambda) {
+  normal_data <- rnorm(n, mean, sd)
+  uniform_data <- runif(n)
+  exponential_data <- rexp(n, lambda)
+  poisson_data <- rpois(n, lambda)
+  data <- data.frame(Index = 1:n, Normal = normal_data, Uniform = uniform_data, Exponential = exponential_data, Poisson = poisson_data)
+  return(data)
+}
+n <- 1000
+mean <- 0
+sd <- 1
+lambda <- 1
+distributions <- generate_distribution(n, mean, sd, lambda)
+distribution_melted <- melt(distributions, id.vars = "Index", variable.name = "Distribution", value.name = "Value")
+ggplot(distribution_melted, aes(x = Value, fill = Distribution)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~Distribution, scales = "free") +
+  labs(title = "Probability Distributions", x = "Value", y = "Density")
